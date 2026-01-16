@@ -13,12 +13,11 @@ export class MailerService {
   constructor(private configService: ConfigService) {
     console.log('🔧 Initializing MailerService');
 
-    const emailHost = this.configService.get<string>('EMAIL_HOST') || 'smtp-relay.brevo.com';
-    const emailPort = Number(this.configService.get<number>('EMAIL_PORT')) || 587;
-    const emailUser = this.configService.get<string>('EMAIL_HOST_USER');
-    const emailPassword = this.configService.get<string>('EMAIL_HOST_PASSWORD');
-    const emailFrom = this.configService.get<string>('EMAIL_FROM') || 'no-reply@ibil.com';
-    const emailUseTls = String(this.configService.get<string>('EMAIL_USE_TLS') || 'true').toLowerCase() === 'true';
+    const emailHost = process.env.EMAIL_HOST || 'smtp-relay.brevo.com';
+    const emailPort = parseInt(process.env.EMAIL_PORT || '587', 10);
+    const emailUser = process.env.EMAIL_HOST_USER || undefined;
+    const emailPassword = process.env.EMAIL_HOST_PASSWORD || undefined;
+    const emailUseTls = String(process.env.EMAIL_USE_TLS ?? 'true').toLowerCase() === 'true';
 
     console.log(`   Host: ${emailHost}`);
     console.log(`   Port: ${emailPort}`);
@@ -111,7 +110,7 @@ export class MailerService {
       });
 
       const mailOptions = {
-        from: this.configService.get<string>('MAIL_FROM') || 'no-reply@ibil.com',
+        from: process.env.EMAIL_FROM || 'visalini864@gmail.com',
         to: email,
         subject: 'Email Verification - IBIL User Service',
         html,
